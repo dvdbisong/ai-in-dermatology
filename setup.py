@@ -11,7 +11,8 @@ with open('LICENSE') as f:
 
 setup(
     name='ai-in-dermatology',
-    version='0.1.0',
+    version='1.0',
+    install_requires=['click'],
     description='Ranked classification of lesions in skin of color'
                 'with deep neural networks using transfer learning and'
                 'patch transformation with computer vision and GANs',
@@ -20,6 +21,11 @@ setup(
     author_email='dvdbisong@gmail.com',
     url='https://github.com/dvdbisong/ai-in-dermatology',
     license=license,
-    packages=find_packages(exclude=('tests', 'docs'))
+    packages=find_packages(exclude=('tests', 'docs')),
+    entry_points={
+        "console_scripts": [
+            "ml = ml.cli:main"
+        ]
+    },
 )
 
