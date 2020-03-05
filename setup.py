@@ -16,7 +16,7 @@ setup(
                 'with deep neural networks using transfer learning and'
                 'patch transformation with computer vision and GANs',
     long_description=readme,
-    author='Ekaba Bisong, Trisha Thompson, Eshan Henshaw',
+    author='Ekaba Bisong, Eshan Henshaw, Trisha Thompson',
     author_email='dvdbisong@gmail.com',
     url='https://github.com/dvdbisong/ai-in-dermatology',
     license=license,
