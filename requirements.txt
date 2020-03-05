@@ -1,2 +1,5 @@
 nose
 sphinx
+os
+shutil
+argparse
