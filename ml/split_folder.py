@@ -23,6 +23,10 @@ def copy_files(raw_path, train_percentage, output_path):
            The partitioning of images into training and test fodlers for each directory sub-folder.
     """
 
+    if not os.path.isdir(raw_path):
+        click.echo(click.style('Source directory (--path) not found', bold=True))
+        raise SystemExit()
+
     directory = [f for f in os.listdir(raw_path) if os.path.isdir(os.path.join(raw_path, f))]
 
     with click.progressbar(directory) as bar:

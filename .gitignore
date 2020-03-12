@@ -95,3 +95,6 @@ idea/
 
 # Data
 data/
+
+# Others
+nohup.out
