@@ -24,7 +24,8 @@ setup(
     packages=find_packages(exclude=('tests', 'docs')),
     entry_points={
         "console_scripts": [
-            "ml = ml.cli:main"
+            "ml = cli.cli:main",
+            # "gcp = cli.gcp_helpers:main"
         ]
     },
 )

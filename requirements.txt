@@ -3,3 +3,4 @@ sphinx
 os
 shutil
 click
+google

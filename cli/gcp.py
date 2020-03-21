@@ -1,39 +1,34 @@
 # -*- coding: utf-8 -*-
 
-
 import os
 import click
 import webbrowser
-from . import helpers
-from . import split_folder
 from subprocess import call, Popen
+from google.cloud import storage
 
 
-@click.group()
-def main():
-    """AI in Dermatology project"""
-    pass
+def create_gcp_cli_group():
+    """GCP helper scripts"""
+    # set Environment Credentials
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'SA-ai-in-derm.json'
+
+    group = click.Group(name='gcp')
+    group.add_command(create_gpu)
+    group.add_command(connect)
+    group.add_command(list_vms)
+    group.add_command(stop_gpu)
+    group.add_command(start_gpu)
+    group.add_command(upload_bucket)
+    group.add_command(create_bucket)
+    group.add_command(list_bucket)
+    return group
 
 
-@click.command()
-def welcome():
-    """The main routine."""
-    click.echo(click.style('AI in Dermatology project:', bold=True))
-    click.echo('Ranked classification of lesions in skin of color with deep neural'
-               'networks using transfer learning and patch transformation with'
-               'computer vision and GANs')
+# Parameters
+# TODO: Work on passing context between commands
 
 
-@click.command()
-@click.option('--path', default='data/raw', help='path to raw data')
-@click.option('--train_percentage', default=60, help='percentage of train-test split')
-@click.option('--output_path', default='data', help='output path for the train-test subdirectories')
-def split_raw_data(path: str, train_percentage: int, output_path: str):
-    """Split raw data into train and test subdirectories"""
-    split_folder.copy_files(path, train_percentage / 100, output_path)
-
-
-@click.command()
+@click.command(name='gpu_create')
 @click.option('--name', default='ai-derm-tf2-2-0-cu100', help='name of GPU instance')
 @click.option('--zone', default='us-west1-b', help='compute zone')
 @click.option('--image_family', default='tf2-2-0-cu100', help='must be one of the GPU-specific image types')
@@ -46,7 +41,7 @@ def create_gpu(name: str, zone: str, image_family: str, accelerator: str):
     call(['bash', './bash/create_deep_vm.sh', name, zone, image_family, accelerator])
 
 
-@click.command()
+@click.command(name='notebook_connect')
 @click.option('--name', default='ai-derm-tf2-2-0-cu100', help='name of GPU instance')
 @click.option('--zone', default='us-west1-b', help='compute zone')
 @click.option('--project_id', default='ekabasandbox', help='GCP project ID')
@@ -64,7 +59,7 @@ def connect(name: str, zone: str, project_id: str):
         webbrowser.open('http://localhost:8080')
 
 
-@click.command()
+@click.command(name='gpu_stop')
 @click.option('--name', default='ai-derm-tf2-2-0-cu100', help='name of GPU instance')
 @click.option('--zone', default='us-west1-b', help='compute zone')
 def stop_gpu(name: str, zone: str):
@@ -73,7 +68,7 @@ def stop_gpu(name: str, zone: str):
     call(['gcloud', 'compute', 'instances', 'stop', name, '--zone', zone])
 
 
-@click.command()
+@click.command(name='gpu_start')
 @click.option('--name', default='ai-derm-tf2-2-0-cu100', help='name of GPU instance')
 @click.option('--zone', default='us-west1-b', help='compute zone')
 def start_gpu(name: str, zone: str):
@@ -82,18 +77,42 @@ def start_gpu(name: str, zone: str):
     call(['gcloud', 'compute', 'instances', 'start', name, '--zone', zone])
 
 
-@click.command()
+@click.command(name='bucket_upload')
+@click.option('--source_dir', help='source folder')
+@click.option('--bucket_name', default='ai-in-dermatology', help='storage bucket')
+def upload_bucket(source_dir: str, bucket_name: str):
+    """Upload data to GCP storage bucket"""
+    click.echo('Uploading source folder: "{}" to storage bucket: "{}"'.format(source_dir, bucket_name))
+    # Instantiates a client
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+
+    if bucket.exists():
+        call(['gsutil', '-m', 'cp', '-R', source_dir, 'gs://{}'.format(bucket_name)])
+    else:
+        click.echo(click.style('Bucket Not Found', bold=True))
+
+
+@click.command(name='bucket_create')
+@click.option('--name', help='storage bucket')
+def create_bucket(name: str):
+    """Create GCP storage bucket"""
+    click.echo('Creating bucket: "{}"'.format(name))
+    call(['gsutil', 'mb', 'gs://{}/'.format(name)])
+
+
+@click.command(name='bucket_list')
+@click.option('--name', default='ai-in-dermatology', help='storage bucket')
+def list_bucket(name: str):
+    """List content of GCP storage bucket"""
+    click.echo('Listing content for bucket: "{}"'.format(name))
+    call(['gsutil', 'ls', 'gs://{}/'.format(name)])
+
+
+@click.command(name='vm_list')
 def list_vms():
     """List compute VMs on GCP"""
     call(['bash', './bash/show_compute_vms.sh'])
 
 
-main.add_command(split_raw_data)
-main.add_command(create_gpu)
-main.add_command(connect)
-main.add_command(list_vms)
-main.add_command(stop_gpu)
-main.add_command(start_gpu)
-
-if __name__ == "__main__":
-    main()
+gcp_cli = create_gcp_cli_group()
