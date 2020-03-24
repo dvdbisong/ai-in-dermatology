@@ -32,16 +32,17 @@ def create_gcp_cli_group():
 @click.option('--name', default='ai-derm-tf2-2-0-cu100', help='name of GPU instance')
 @click.option('--zone', default='us-west1-b', help='compute zone')
 @click.option('--image_family', default='tf2-2-0-cu100', help='must be one of the GPU-specific image types')
+@click.option('--machine_type', default='n1-highcpu-64', help='machine type')
 @click.option('--accelerator', default='type=nvidia-tesla-k80,count=8', help='specifies the GPU type to use. Must be '
                                                                              'specified in the format '
                                                                              '--accelerator="type=TYPE,count=COUNT"')
-def create_gpu(name: str, zone: str, image_family: str, accelerator: str):
+def create_gpu(name: str, zone: str, image_family: str, accelerator: str, machine_type: str):
     """Provision a Deep Learning VM instance with one or more GPUs"""
     click.echo('Creating GPU instance {}'.format(name))
-    call(['bash', './bash/create_deep_vm.sh', name, zone, image_family, accelerator])
+    call(['bash', './bash/create_deep_vm.sh', name, zone, image_family, accelerator, machine_type])
 
 
-@click.command(name='notebook_connect')
+@click.command(name='nb_connect')
 @click.option('--name', default='ai-derm-tf2-2-0-cu100', help='name of GPU instance')
 @click.option('--zone', default='us-west1-b', help='compute zone')
 @click.option('--project_id', default='ekabasandbox', help='GCP project ID')
