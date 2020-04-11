@@ -57,8 +57,8 @@ def code_commands(args: dict):
             try:
                 call(['virtualenv', '--system-site-packages', '-p', 'python3', 'bigan/venv/'])
                 run('source bigan/venv/bin/activate')
-                call(['pip', 'install', 'tensorflow==1.14'])
-                call(['pip', 'install', 'keras==2.2.5'])
+                call(['pip', 'install', '--user', 'tensorflow==1.14'])
+                call(['pip', 'install', '--user', 'keras==2.2.5'])
             except CalledProcessError:
                 print('Bad command')
         else:
