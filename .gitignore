@@ -95,7 +95,11 @@ idea/
 
 # Data
 data/
+bigan/data
 
 # Others
 nohup.out
 SA-ai-in-derm.json
+logfile.log
+__pycache__
+data

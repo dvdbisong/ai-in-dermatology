@@ -1,32 +1,89 @@
 # -*- coding: utf-8 -*-
+import re
+import sys
+from setuptools import setup
+from setuptools.command.test import test as TestCommand
 
-from setuptools import setup, find_packages
+REQUIRES = [
+    'docopt', 'invoke', 'tqdm', 'click', 'tensorflow'
+]
 
 
-with open('README.md') as f:
-    readme = f.read()
+class PyTest(TestCommand):
+    def finalize_options(self):
+        """finalize options"""
+        TestCommand.finalize_options(self)
+        self.test_args = []
+        self.test_suite = True
 
-with open('LICENSE') as f:
-    license = f.read()
+    def run_tests(self):
+        """run tests"""
+        import pytest
+        errcode = pytest.main(self.test_args)
+        sys.exit(errcode)
+
+
+def find_version(fname):
+    """Attempts to find the version number in the file names fname.
+    Raises RuntimeError if not found.
+    """
+    version = ''
+    with open(fname) as fp:
+        reg = re.compile(r'__version__ = [\'"]([^\'"]*)[\'"]')
+        for line in fp:
+            m = reg.match(line)
+            if m:
+                version = m.group(1)
+                break
+    if not version:
+        raise RuntimeError('Cannot find version information')
+    return version
+
+
+__version__ = find_version("dermai.py")
+
+
+def read(fname):
+    """read file content"""
+    with open(fname) as fp:
+        content = fp.read()
+    return content
+
 
 setup(
     name='ai-in-dermatology',
-    version='1.0',
-    install_requires=['click'],
+    version="0.1.0",
     description='Ranked classification of lesions in skin of color'
                 'with deep neural networks using transfer learning and'
                 'patch transformation with computer vision and GANs',
-    long_description=readme,
-    author='Ekaba Bisong, Eshan Henshaw, Trisha Thompson',
+    long_description=read("README.rst"),
+    author='Eshan Henshaw, Ekaba Bisong, Trisha Thompson',
     author_email='dvdbisong@gmail.com',
     url='https://github.com/dvdbisong/ai-in-dermatology',
-    license=license,
-    packages=find_packages(exclude=('tests', 'docs')),
+    install_requires=REQUIRES,
+    license=read("LICENSE"),
+    zip_safe=False,
+    keywords='biomedbert',
+    classifiers=[
+        'Development Status :: 2 - Pre-Alpha',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
+        'Natural Language :: English',
+        "Programming Language :: Python :: 2",
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: Implementation :: CPython',
+        'Programming Language :: Python :: Implementation :: PyPy'
+    ],
+    py_modules=["biomedbert"],
     entry_points={
-        "console_scripts": [
-            "ml = cli.cli:main",
-            # "gcp = cli.gcp_helpers:main"
+        'console_scripts': [
+            "dermai = dermai:main"
         ]
     },
+    tests_require=['pytest'],
+    cmdclass={'test': PyTest}
 )
-
