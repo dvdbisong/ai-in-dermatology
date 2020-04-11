@@ -10,6 +10,7 @@ Usage:
   dermai gcp vm connect <vm-instance>
   dermai code split dataset <data_path> <train_percentage> <output_path>
   dermai code train gan <image_dir> <train_steps>
+  dermai code download data
   dermai -h | --help
   dermai --version
 
@@ -36,6 +37,14 @@ __license__ = "MIT"
 
 def code_commands(args: dict):
     """Command to train BioMedBert model"""
+
+    # download datas
+    if args['code'] and args['download'] and args['data']:
+        try:
+            run('gsutil -m cp -r gs://trisha-ai-in-dermatology/train/ .')
+            run('mv train data')
+        except exceptions.UnexpectedExit:
+            print('Bad command')
 
     # train vocab
     if args['code'] and args['split'] and args['dataset']:
