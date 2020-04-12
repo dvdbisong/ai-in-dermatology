@@ -1,4 +1,4 @@
-#!/Users/ekababisong/Documents/Playground/ai-in-dermatology/src/bigan/venv/bin/python
+#!/home/ekababisong/ai-in-dermatology/bigan/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

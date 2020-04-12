@@ -28,7 +28,7 @@ def _deactivate(args):
 _deactivate(["nondestructive"])
 aliases["deactivate"] = _deactivate
 
-$VIRTUAL_ENV = r"/Users/ekababisong/Documents/Playground/ai-in-dermatology/src/bigan/venv"
+$VIRTUAL_ENV = r"/home/ekababisong/ai-in-dermatology/bigan/venv"
 
 $_OLD_VIRTUAL_PATH = $PATH
 $PATH = $PATH[:]
