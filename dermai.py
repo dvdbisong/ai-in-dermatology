@@ -73,7 +73,18 @@ def code_commands(args: dict):
             except exceptions.UnexpectedExit:
                 print('Bad command')
         else:
-            print('Venv alreay exists')
+            print('Virtual environment alreay exists')
+
+    # activate gan venev
+    if args['code'] and args['activate'] and args['gan'] and args['venv']:
+        # change virtualenv
+        if os.path.exists('bigan/venv/'):
+            try:
+                run('source bigan/venv/bin/activate')
+            except exceptions.UnexpectedExit:
+                print('Bad command')
+        else:
+            print('Virtual environment does not exist')
 
 
 def gcp_commands(args: dict):
