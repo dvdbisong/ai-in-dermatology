@@ -53,24 +53,10 @@ def code_commands(args: dict):
 
     # train GAN on image folder
     if args['code'] and args['train'] and args['gan']:
-        # change virtualenv
-        if os.path.exists('bigan/venv/'):
-            try:
-                run('source bigan/venv/bin/activate')
-            except exceptions.UnexpectedExit:
-                print('Virtual environment not set')
-
-            # set image folder
-            from bigan import bigan
-            bigan.set_directory(args['<image_dir>'])
-            bigan.main(int(args['<train_steps>']))
-
-            try:
-                run('deactivate')
-            except exceptions.UnexpectedExit:
-                print('Bad command to deactivate environment')
-        else:
-            print('No virtual environment set')
+        # set image folder
+        from bigan import bigan
+        bigan.set_directory(args['<image_dir>'])
+        bigan.main(int(args['<train_steps>']))
 
     # set gan venev
     if args['code'] and args['set'] and args['gan'] and args['venv']:
