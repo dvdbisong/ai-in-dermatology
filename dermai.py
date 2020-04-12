@@ -10,6 +10,7 @@ Usage:
   dermai gcp vm connect <vm-instance>
   dermai code split dataset <data_path> <train_percentage> <output_path>
   dermai code train gan <image_dir> <train_steps>
+  dermai code set gan venv
   dermai code download data
   dermai -h | --help
   dermai --version
@@ -53,27 +54,40 @@ def code_commands(args: dict):
     # train GAN on image folder
     if args['code'] and args['train'] and args['gan']:
         # change virtualenv
+        if os.path.exists('bigan/venv/'):
+            try:
+                run('source bigan/venv/bin/activate')
+            except exceptions.UnexpectedExit:
+                print('Virtual environment not set')
+
+            # set image folder
+            from bigan import bigan
+            bigan.set_directory(args['<image_dir>'])
+            bigan.main(int(args['<train_steps>']))
+
+            try:
+                run('deactivate')
+            except exceptions.UnexpectedExit:
+                print('Bad command to deactivate environment')
+        else:
+            print('No virtual environment set')
+
+    # set gan venev
+    if args['code'] and args['set'] and args['gan'] and args['venv']:
+        # change virtualenv
         if not os.path.exists('bigan/venv/'):
             try:
-                call(['virtualenv', '--system-site-packages', '-p', 'python3', 'bigan/venv/'])
+                # call(['virtualenv', '--system-site-packages', '-p', 'python3', 'bigan/venv/'])
+                run('virtualenv --system-site-packages -p python3 bigan/venv/')
                 run('source bigan/venv/bin/activate')
-                call(['pip', 'install', '--user', 'tensorflow==1.14'])
-                call(['pip', 'install', '--user', 'keras==2.2.5'])
-            except CalledProcessError:
+                # call(['pip', 'install', '--user', 'tensorflow==1.14'])
+                run('pip install --user tensorflow==1.14.0')
+                # call(['pip', 'install', '--user', 'keras==2.2.5'])
+                run('pip install --user keras==2.2.5')
+            except exceptions.UnexpectedExit:
                 print('Bad command')
         else:
-            run('source bigan/venv/bin/activate')
-
-        # set image folder
-        from bigan import bigan
-        bigan.set_directory(args['<image_dir>'])
-        bigan.main(int(args['<train_steps>']))
-
-        # deactivate environment
-        try:
-            run('deactivate')
-        except exceptions.UnexpectedExit:
-            print('Bad command')
+            run('Venv alreay exists')
 
 
 def gcp_commands(args: dict):
