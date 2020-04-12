@@ -87,7 +87,7 @@ def code_commands(args: dict):
             except exceptions.UnexpectedExit:
                 print('Bad command')
         else:
-            run('Venv alreay exists')
+            print('Venv alreay exists')
 
 
 def gcp_commands(args: dict):
