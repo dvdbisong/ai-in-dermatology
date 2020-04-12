@@ -11,6 +11,7 @@ Usage:
   dermai code split dataset <data_path> <train_percentage> <output_path>
   dermai code train gan <image_dir> <train_steps>
   dermai code set gan venv
+  dermai code activate gan venv
   dermai code download data
   dermai -h | --help
   dermai --version
