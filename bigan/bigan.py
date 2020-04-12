@@ -581,6 +581,9 @@ class BiGAN(object):
 
     def saveModel(self, model, name, num):
         json = model.to_json()
+        if not os.path.exists("models/{}/".format(directory)):
+            os.makedirs("models/{}/".format(directory))
+
         with open("models/{}/".format(directory) + name + ".json", "w") as json_file:
             json_file.write(json)
 
