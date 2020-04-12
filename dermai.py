@@ -81,8 +81,8 @@ def code_commands(args: dict):
         # change virtualenv
         if os.path.exists('bigan/venv/'):
             try:
-                run('source bigan/venv/bin/activate')
-            except exceptions.UnexpectedExit:
+                call(['virtualenv', '--system-site-packages', '-p', 'python3', 'bigan/venv/'])
+            except CalledProcessError:
                 print('Bad command')
         else:
             print('Virtual environment does not exist')
