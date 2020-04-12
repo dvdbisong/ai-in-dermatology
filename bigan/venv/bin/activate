@@ -46,7 +46,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV='/Users/ekababisong/Documents/Playground/ai-in-dermatology/src/bigan/venv'
+VIRTUAL_ENV='/home/ekababisong/ai-in-dermatology/bigan/venv'
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
